@@ -1,8 +1,9 @@
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 
 int main() {
-  sf::Window window(sf::VideoMode({800, 600}), "SFML Spline Test");
-
+  sf::RenderWindow window(sf::VideoMode({800, 600}), "SFML Spline Test");
 
   // run the program as long as the window is open
   while (window.isOpen())
