@@ -1,21 +1,39 @@
-#include <SFML/System/Vector2.hpp>
-#include <vector>
+#include <iostream>
 
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics.hpp>
 
-int main() {
-  sf::RenderWindow window(sf::VideoMode({800, 600}), "SFML Spline Test");
+sf::Vector2f catmullRom(sf::Vector2f p0, sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f p3, float t)
+{
+  float t2 = t*t;
+  float t3 = t*t2;
 
-  // Points that should be connected in the spline
+  return 0.5f * (
+    (-3.f*p2 + 3.f*p1 - p0 + p3) * t3
+    + (-p3 - 5.f*p1 + 4.f*p2 + 2.f*p0) * t2
+    + (p2 - p0) * t
+    + (2.f*p1)
+  );
+}
+
+int main() {
+  sf::RenderWindow window(sf::VideoMode({1000, 1000}), "SFML Spline Test");
+
+  // Spline points
   std::vector<sf::Vector2f> points = {
-    {100, 400}, {250, 100}, {400, 500}, {550, 200}
+    {100, 400}, {250, 100}, {400, 500}, {450, 550}, {700, 400}
   };
 
   sf::VertexArray spline(sf::PrimitiveType::LineStrip);
-
-  for (sf::Vector2f point : points)
+  int samplesPerSegment = 100;
+  for (int i = 0; i+3 < points.size(); i++)
   {
-    spline.append(sf::Vertex{{point}, sf::Color::Green});
+    for (int j = 0; j < samplesPerSegment; j++)
+    {
+      float t = j / static_cast<float>(samplesPerSegment);
+      sf::Vector2f pos = catmullRom(points[i], points[i+1], points[i+2], points[i+3], t);
+      spline.append(sf::Vertex{pos, sf::Color::Green});
+    }
   }
 
   // run the program as long as the window is open
