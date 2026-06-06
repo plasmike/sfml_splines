@@ -69,7 +69,9 @@ void openPoints(std::vector<sf::Vector2f>& points)
 }
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode({1500, 1000}), "SFML Spline Test");
+  sf::ContextSettings settings;
+  settings.antiAliasingLevel = 16;
+  sf::RenderWindow window(sf::VideoMode({1500, 1000}), "SFML Spline Test", sf::State::Windowed, settings);
 
   // Spline points
   std::vector<sf::Vector2f> points = {
