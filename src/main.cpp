@@ -42,14 +42,30 @@ int main() {
           if (const auto* evnt = event->getIf<sf::Event::MouseButtonPressed>())
           {
             sf::Vector2f mousePos = {static_cast<float>(evnt->position.x), static_cast<float>(evnt->position.y)};
+            bool found = false;
+
             for (int i = 0; i < points.size(); i++)
             {
               sf::Vector2f diff = mousePos - points[i];
               if (sqrt(diff.x * diff.x + diff.y * diff.y) < pointRadius)
               {
-                dragPointIndex = i;
+                if (evnt->button == sf::Mouse::Button::Left) // drag/move point
+                {
+                  found = true;
+                  dragPointIndex = i;
+                }
+                else if (evnt->button == sf::Mouse::Button::Right) // remove point
+                {
+                  points.erase(points.begin() + i);
+                  found = true;
+                  dragPointIndex = -1;
+                }
                 break;
               }
+            }
+            if (!found && evnt->button == sf::Mouse::Button::Left)
+            {
+              points.push_back(mousePos); // create new point
             }
           }
 
