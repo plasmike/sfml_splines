@@ -69,7 +69,7 @@ void openPoints(std::vector<sf::Vector2f>& points)
 }
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode({1000, 1000}), "SFML Spline Test");
+  sf::RenderWindow window(sf::VideoMode({1500, 1000}), "SFML Spline Test");
 
   // Spline points
   std::vector<sf::Vector2f> points = {
@@ -77,7 +77,7 @@ int main() {
   };
 
   int samplesPerSegment = 100;
-  float pointRadius = 5.f; // Radius for grabbing the points of the curve
+  float pointRadius = 6.f; // Radius for grabbing the points of the curve
   int dragPointIndex = -1; // point being currently moved/dragged by the mouse | -1 = none
 
   // run the program as long as the window is open
