@@ -1,5 +1,6 @@
 # Messing around with splines in SFML
 
+## Catmull-Rom spline
 ## Controls:
 - press Ctrl + S to save the spline as csv 
 - press Ctrl + O to open a spline from a csv file
