@@ -1,9 +1,15 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/WindowEnums.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics.hpp>
+
+#include "portable-file-dialogs.h"
 
 sf::Vector2f catmullRom(sf::Vector2f p0, sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f p3, float t)
 {
@@ -16,6 +22,50 @@ sf::Vector2f catmullRom(sf::Vector2f p0, sf::Vector2f p1, sf::Vector2f p2, sf::V
     + (p2 - p0) * t
     + (2.f*p1)
   );
+}
+
+void savePoints(const std::vector<sf::Vector2f>& points)
+{
+  auto f = pfd::save_file("Choose file to save",
+                          ".",
+                            { "Comma Seperated Value (.csv)", "*.csv" },
+                            pfd::opt::force_overwrite);
+  std::cout << "Selected file: "  << f.result() << "\n";
+
+  std::string path = f.result();
+  if (path.empty())
+      return;
+
+  std::ofstream file(path);
+  file << "x,y" << "/n";
+  for (sf::Vector2f point : points)
+  {
+    file << point.x << "," << point.y << "\n";
+  }
+}
+
+void openPoints(std::vector<sf::Vector2f>& points)
+{
+  auto f = pfd::open_file("Choose a csv file to open", ".",
+                          { "Comma Seperated Value Files (.csv)", "*.csv"});
+  std::vector<std::string> results = f.result();
+
+  if (results.empty())
+      return;
+
+  std::string path = results[0]; // get first file only
+  std::ifstream file(path);
+  std::string line;
+  std::getline(file, line); // remove first "x,y" line
+  points.clear();
+  while (std::getline(file, line))
+  {
+      std::stringstream ss(line);
+      std::string x, y;
+      std::getline(ss, x, ',');
+      std::getline(ss, y, ',');
+      points.push_back({std::stof(x), std::stof(y)}); // convert values to floats and insert them
+  }
 }
 
 int main() {
@@ -38,6 +88,15 @@ int main() {
       {
           if (event->is<sf::Event::Closed>())
               window.close();
+
+          if (const auto* keyPressed= event->getIf<sf::Event::KeyPressed>())
+          {
+            if(keyPressed->scancode == sf::Keyboard::Scancode::S && keyPressed->control)
+              savePoints(points);
+
+            if(keyPressed->scancode == sf::Keyboard::Scancode::O && keyPressed->control)
+              openPoints(points);
+          }
 
           if (const auto* evnt = event->getIf<sf::Event::MouseButtonPressed>())
           {

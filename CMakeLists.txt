@@ -6,6 +6,7 @@ project(SFML_Splines CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
 
+include(${CMAKE_BINARY_DIR}/generators/portable-file-dialogs-config.cmake)
 find_package(SFML REQUIRED)
 
 # automatically add all cpp files in src to the project
@@ -26,4 +27,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     SFML::Graphics
     SFML::Window
     SFML::System
+    portable-file-dialogs::portable-file-dialogs
 )
