@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.29)
 project(SFML_Splines CXX)
 
-#set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") # first change conan profile compiler.runtime to static instead of dynamic
+if (WIN32)
+  #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") # first change conan profile compiler.runtime to static instead of dynamic
+endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
@@ -29,3 +31,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     SFML::System
     portable-file-dialogs::portable-file-dialogs
 )
+
+if(APPLE)
+    target_link_options(${PROJECT_NAME} PRIVATE "-ObjC" "-all_load")
+endif()
