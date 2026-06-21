@@ -20,4 +20,4 @@
 1. conan install . -s build_type=Release
 2. .\build\Release\generators\conanvcvars.ps1
 3. cmake --preset conan-release
-3. cmake --build --preset conan-release
+4. cmake --build --preset conan-release
